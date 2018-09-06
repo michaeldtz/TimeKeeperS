@@ -1,0 +1,323 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes
+END
+ItemTypeManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/ItemTypeManager.h
+END
+SettingsView.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/SettingsView.h
+END
+TimeKeeperAppDelegate.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/TimeKeeperAppDelegate.m
+END
+TimeRecording.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/TimeRecording.h
+END
+MDCChartDataGroup.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MDCChartDataGroup.h
+END
+ItemViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/ItemViewController.h
+END
+PersonalRecordingItem.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/PersonalRecordingItem.h
+END
+ItemTypeManager.m
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/ItemTypeManager.m
+END
+SettingsView.m
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/SettingsView.m
+END
+TimeRecording.m
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/TimeRecording.m
+END
+MDCChartDataGroup.m
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MDCChartDataGroup.m
+END
+PersonalTimeRecord.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/PersonalTimeRecord.h
+END
+ItemViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/ItemViewController.m
+END
+PersonalRecordingItem.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/PersonalRecordingItem.m
+END
+PersonalTimeRecord.m
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/PersonalTimeRecord.m
+END
+AboutViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/AboutViewController.h
+END
+.DS_Store
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/.DS_Store
+END
+UIImage+UIImageUtils.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/UIImage+UIImageUtils.h
+END
+AboutViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/AboutViewController.m
+END
+ItemCreateViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/ItemCreateViewController.h
+END
+MDCLegend.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MDCLegend.h
+END
+UIImage+UIImageUtils.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/UIImage+UIImageUtils.m
+END
+UIImage-NSCoding.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/UIImage-NSCoding.h
+END
+MDCPieChart.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MDCPieChart.h
+END
+OutputFormatter.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/OutputFormatter.h
+END
+MDCChart.h
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MDCChart.h
+END
+ItemCreateViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/ItemCreateViewController.m
+END
+MDCLegend.m
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MDCLegend.m
+END
+UIImage-NSCoding.m
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/UIImage-NSCoding.m
+END
+CacheDataManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/CacheDataManager.h
+END
+MDCPieChart.m
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MDCPieChart.m
+END
+DrawUtilities.h
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/DrawUtilities.h
+END
+OutputFormatter.m
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/OutputFormatter.m
+END
+MDCChart.m
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MDCChart.m
+END
+MainAnalyticsViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MainAnalyticsViewController.h
+END
+CacheDataManager.m
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/CacheDataManager.m
+END
+DrawUtilities.m
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/DrawUtilities.m
+END
+TimeRecordSender.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/TimeRecordSender.h
+END
+MainAnalyticsViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MainAnalyticsViewController.m
+END
+TimeRecordSender.m
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/TimeRecordSender.m
+END
+ModalScreenCloser.h
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/ModalScreenCloser.h
+END
+MessagingCell.xib
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MessagingCell.xib
+END
+MDCLegendObject.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MDCLegendObject.h
+END
+MDCBarChart.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MDCBarChart.h
+END
+ImageScaler.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/ImageScaler.h
+END
+MDCLegendObject.m
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MDCLegendObject.m
+END
+MDCBarChart.m
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MDCBarChart.m
+END
+TimeRecords.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/TimeRecords.h
+END
+ImageScaler.m
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/ImageScaler.m
+END
+MainViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MainViewController.h
+END
+TimeRecords.m
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/TimeRecords.m
+END
+TimeKeeperAppDelegate.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/TimeKeeperAppDelegate.h
+END
+MainViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/repos/!svn/ver/42/%5BApps%5D/TimeKeeperS/Classes/MainViewController.m
+END

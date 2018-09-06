@@ -1,0 +1,191 @@
+	//
+	//  SettingsView.m
+	//  TimeKeeper
+	//
+	//  Created by Michael Dietz on 06.12.10.
+	//  Copyright 2010 SAP MD. All rights reserved.
+	//
+
+#import "SettingsView.h"
+#import "ItemTypeManager.h"
+#import "PersonalTimeRecord.h"
+#import "CacheDataManager.h"
+#import "PersonalRecordingItem.h"
+#import "OutputFormatter.h"
+
+@implementation SettingsView
+
+@synthesize delegate, pickerView, dateFormatTF;
+
+-(void)viewDidLoad{
+	itemTypes = [[ItemTypeManager getInstance] itemTypes];
+	dateFormatTF.text = [CacheDataManager getExportDateFormat];
+}
+
+#pragma mark TextFieldCLoser
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+	[textField resignFirstResponder];
+	return YES;
+}
+
+
+#pragma mark Actions
+
+-(IBAction)back{
+	[CacheDataManager setExportDateFormat:dateFormatTF.text];
+	
+	if([delegate conformsToProtocol:@protocol(ModalScreenCloser)]){
+		[delegate closeModalScreen:self];
+	}
+}
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
+	return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
+	return [itemTypes count];
+}
+
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
+	return [ItemTypeManager text4ItemType:row];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
+	selectedRow = row;
+}
+
+
+-(IBAction)change{
+	
+	UIAlertView* changePopup = [[UIAlertView alloc] initWithTitle:@"Change Name" message:@"<this gets covered>" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Change",nil];
+	CGAffineTransform myTransform = CGAffineTransformMakeTranslation(0.0, 30.0);
+	[changePopup setTransform:myTransform];
+	
+	typeChangeTF = [[UITextField alloc] initWithFrame:CGRectMake(12.0, 45.0, 260.0, 25.0)];
+	[typeChangeTF setBackgroundColor:[UIColor whiteColor]];
+	[typeChangeTF setText:[ItemTypeManager text4ItemType:selectedRow]];
+	
+	[changePopup addSubview:typeChangeTF];
+	[changePopup show];
+}
+
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+	if(buttonIndex == 1){
+		[[ItemTypeManager getInstance] changeNameAtIndex:selectedRow :typeChangeTF.text];
+		[pickerView reloadAllComponents];
+	}
+}
+
+#pragma mark Export
+
+-(IBAction)prepareExport{
+
+		//Prepare Export Data
+	NSMutableString* exportString = [[NSMutableString alloc] initWithString:@""];
+	[exportString appendString:@"New Item;Item ID;Name;Description;Type;Planned Effort;StartingDate;"];
+	[exportString appendString:@"Record ID;Workdate;Recorded Time;Hours;Minutes;Short Text;Recording Date\n"];
+	
+	NSMutableArray* list = [CacheDataManager loadItemList];
+	for(PersonalRecordingItem* item in list){
+		
+			//Prepare Date Formatter
+		NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+		[formatter setDateFormat:[CacheDataManager getExportDateFormat]];
+		
+		
+		BOOL first = YES;
+			//Generate One Entry per Recording
+		for(PersonalTimeRecord* record in item.timeRecords){
+			if(first)
+				[exportString appendFormat:@"X;%@;%@;%@;%@;%d;%d;", item.uniqueID, item.name, item.description, [ItemTypeManager text4ItemType:item.type], item.planEffort, item.startedTimeRecording, item.startedTimeRecording];
+			else 
+				[exportString appendFormat:@"X;%@;%@;%@;%d;%d;%d;", item.uniqueID, item.name, item.description, item.type, item.planEffort, item.startedTimeRecording, item.startedTimeRecording];
+			
+			first = NO;
+			[exportString appendFormat:@"%@;\"%@\";%@;%d;%d;%@;\"%@\"\n", record.uniqueID, [formatter stringFromDate:record.workdate], [OutputFormatter hoursAndMinutesToSimpleString:record.hours :record.minutes], record.hours, record.minutes, record.shortText, [formatter stringFromDate:record.recordingDate] ];
+		}
+		
+		if(first)
+			[exportString appendFormat:@"X;%@;%@;%@;%d;%d;%d;", item.uniqueID, item.name, item.description, item.type, item.planEffort, item.startedTimeRecording, item.startedTimeRecording];
+		
+		exportData = [[exportString dataUsingEncoding: NSUTF8StringEncoding] retain];
+	}
+	
+		//Ask user for type of export
+	UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"How do you want to export the data?", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:NSLocalizedString(@"Cancel",@"") otherButtonTitles:NSLocalizedString(@"Send via E-Mail",@""), NSLocalizedString(@"Save on Device",@""), nil];
+	sheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+	[sheet showInView:self.view];
+	[sheet release];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) { //Email
+		[self exportViaEmail];
+	}else if (buttonIndex == 2) { //Locally
+		[self exportLocally];
+	}
+	[exportData release]; exportData = nil;
+	[exportFileName release]; exportFileName = nil;
+}
+
+-(void)exportLocally{
+	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+	[formatter setDateFormat:@"ddMMyyyy"];
+	NSString *today = [formatter stringFromDate:[NSDate date]];
+	NSString* filename = [NSString stringWithFormat:@"export_full_%@.csv",today];
+	
+	NSString *documentsDirectory = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+	NSString *filePath = [documentsDirectory stringByAppendingPathComponent:filename];
+	[exportData writeToFile:filePath atomically:YES];
+}
+
+-(void)exportViaEmail{
+	MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+	
+	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+	[formatter setDateFormat:@"ddMMyyyy"];
+	NSString *today = [formatter stringFromDate:[NSDate date]];
+	NSString* filename = [NSString stringWithFormat:@"export_full_%@.csv",today];
+	
+	[controller setMailComposeDelegate:self];
+	[controller setSubject:NSLocalizedString(@"TimeKeeper Pro Full Export",@"")];
+	[controller addAttachmentData:exportData mimeType:@"csv" fileName:filename];
+	
+	[self presentModalViewController:controller animated:YES];
+	
+	[controller release];
+}
+
+#pragma mark Feedback Action
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error{
+	[self dismissModalViewControllerAnimated:YES];
+}
+
+
+#pragma mark AppLifeCycle
+
+- (void)didReceiveMemoryWarning {
+		// Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+		// Release any cached data, images, etc that aren't in use.
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+		// Release any retained subviews of the main view.
+		// e.g. self.myOutlet = nil;
+}
+
+
+- (void)dealloc {
+    [super dealloc];
+}
+
+
+@end

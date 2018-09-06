@@ -1,0 +1,23 @@
+	//
+	//  MainAnalytics.h
+	//  TimeKeeper
+	//
+	//  Created by Dietz, Michael on 5/4/10.
+	//  Copyright 2010 MD. All rights reserved.
+	//
+
+#import <UIKit/UIKit.h>
+#import "MDCPieChart.h"
+
+@interface MainAnalyticsViewController : UIViewController {
+	
+	MDCChart* barchart;
+	MDCChart* barChartLegend;
+	MDCChart* piechart1;
+	MDCChart* piechart2;
+
+}
+
+	//-(void)changeAnalytics;
+
+@end

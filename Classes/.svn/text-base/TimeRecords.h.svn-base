@@ -1,0 +1,26 @@
+//
+//  TimeRecords.h
+//
+//  Created by Dietz, Michael on 5/2/10.
+//  Copyright 2010 MD. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "PersonalRecordingItem.h"
+#import <MessageUI/MessageUI.h>
+
+@interface TimeRecords : UITableViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate> {
+
+	PersonalRecordingItem* item;
+	NSData*   exportData;
+	NSString* exportFileName;
+}
+
+@property(assign) PersonalRecordingItem* item;
+
+
+-(void)exportLocally;
+-(void)exportViaEmail;
+
+
+@end

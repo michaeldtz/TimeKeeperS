@@ -1,0 +1,33 @@
+//
+//  RootViewController.h
+//  Team Communicator
+//
+//  Created by Michael Dietz on 16.04.10.
+//  Copyright __MyCompanyName__ 2010. All rights reserved.
+//
+
+#import "ModalScreenCloser.h"
+#import "CacheDataManager.h"
+#import "AboutViewController.h"
+
+@interface MainViewController : UIViewController <ModalScreenCloser, UIActionSheetDelegate, UITableViewDelegate, UITableViewDataSource> {
+
+	IBOutlet UIScrollView* squareView;
+	IBOutlet UITableView*  listView;
+
+}
+
+@property(assign) IBOutlet UIScrollView* squareView;
+@property(assign) IBOutlet UITableView* listView;
+
+-(void)refreshSquarePane;
+-(void)openRecordingItem:(id)eventObject;
+-(IBAction)showAbout;
+-(IBAction)showSettings;
+-(void)askForType;
+-(void)showAnalytics;
+-(IBAction)changeViewType;
+
+@end
+
+

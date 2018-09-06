@@ -1,0 +1,176 @@
+	//
+	//  TimeRecords.m
+	//
+	//  Created by Dietz, Michael on 5/2/10.
+	//  Copyright 2010 MD. All rights reserved.
+	//
+
+#import "TimeRecords.h"
+#import "PersonalTimeRecord.h"
+#import "OutputFormatter.h"
+
+@implementation TimeRecords
+
+@synthesize item, table;
+
+#pragma mark -
+#pragma mark View lifecycle
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+	
+    self.navigationItem.title = NSLocalizedString(@"Recorded Hours",@"");
+	UIBarButtonItem* exportButton = [[UIBarButtonItem alloc] initWithTitle:@"Export" style:UIBarButtonItemStyleBordered target:self action:@selector(prepareExport)];
+	self.navigationItem.rightBarButtonItem = exportButton;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+	[self.table reloadData];
+}
+
+
+#pragma mark Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [item.timeRecords count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    static NSString *CellIdentifier = @"TimeRecordCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
+    }
+	
+	PersonalTimeRecord* record = [item.timeRecords objectAtIndex:indexPath.row];
+	
+	NSString *accept = [[NSBundle mainBundle] pathForResource:@"clock" ofType:@"png"]; 
+	UIImage* imageOK = [[UIImage alloc] initWithContentsOfFile:accept];
+	
+	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+	[formatter setDateFormat:NSLocalizedString(@"MM/dd/yyyy",@"DateFormatter")];
+	
+	NSMutableString* textString = [[NSMutableString alloc] initWithString:[OutputFormatter hoursAndMinutesToMediumString:record.hours :record.minutes]];
+	[textString appendFormat:NSLocalizedString(@" on %@",@""), 	[formatter stringFromDate:record.workdate]];
+	
+    cell.textLabel.text = textString;
+	cell.detailTextLabel.text = record.shortText;
+	cell.selectionStyle = UITableViewCellSelectionStyleNone;
+	
+	cell.imageView.image = imageOK;
+	
+    return cell;
+}
+
+	// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	if (editingStyle == UITableViewCellEditingStyleDelete) {
+			// Delete the row from the data source
+		[item.timeRecords removeObjectAtIndex:indexPath.row];
+		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
+		[CacheDataManager saveItemList];
+	}      
+}
+
+
+#pragma mark Export
+
+-(void)prepareExport{
+	
+		//Prepare Date Formatter
+	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+	[formatter setDateFormat:[CacheDataManager getExportDateFormat]];
+	NSString *today = [formatter stringFromDate:[NSDate date]];
+	
+		//Prepare Export Data
+	NSMutableString* exportString = [[NSMutableString alloc] initWithString:@""];
+	
+	[exportString appendFormat:@"RecordingItem;%@;Type;%D;Planned Effort;%d;Exported on;%@\n\n\n", item.name, item.type, item.planEffort, today ];
+	[exportString appendString:@"ID;Workdate;Recorded Time;Hours;Minutes;Short Text;Recording Date\n"];
+	
+		//Generate One Entry per Recording
+	for(PersonalTimeRecord* record in item.timeRecords){
+		[exportString appendFormat:@"%@;'%@';%@;%d;%d;%@;'%@'\n", record.uniqueID, [formatter stringFromDate:record.workdate], [OutputFormatter hoursAndMinutesToSimpleString:record.hours :record.minutes], record.hours, record.minutes, record.shortText, [formatter stringFromDate:record.recordingDate] ];
+	}
+
+	exportData = [[exportString dataUsingEncoding: NSUTF8StringEncoding] retain];
+	
+		//Ask user for type of export
+	UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"How do you want to export the data?", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"") destructiveButtonTitle:NSLocalizedString(@"Cancel",@"") otherButtonTitles:NSLocalizedString(@"Send via E-Mail",@""), NSLocalizedString(@"Save on Device",@""), nil];
+	sheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+	[sheet showInView:self.view];
+	[sheet release];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) { //Email
+		[self exportViaEmail];
+	}else if (buttonIndex == 2) { //Locally
+		[self exportLocally];
+	}
+	[exportData release]; exportData = nil;
+	[exportFileName release]; exportFileName = nil;
+}
+
+-(void)exportLocally{
+	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+	[formatter setDateFormat:@"ddMMyyyy"];
+	NSString *today = [formatter stringFromDate:[NSDate date]];
+	NSString* filename = [NSString stringWithFormat:@"export_%@.csv",today];
+	
+	NSString *documentsDirectory = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+	NSString *filePath = [documentsDirectory stringByAppendingPathComponent:filename];
+	[exportData writeToFile:filePath atomically:YES];
+}
+
+-(void)exportViaEmail{
+	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+	[formatter setDateFormat:@"ddMMyyyy"];
+	NSString *today = [formatter stringFromDate:[NSDate date]];
+	NSString* filename = [NSString stringWithFormat:@"export_%@.csv",today];
+	
+	MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+	
+	[controller setMailComposeDelegate:self];
+	[controller setSubject:NSLocalizedString(@"TimeKeeper Pro Export",@"")];
+	[controller addAttachmentData:exportData mimeType:@"csv" fileName:filename];
+	
+	[self presentModalViewController:controller animated:YES];
+	
+	[controller release];
+}
+
+#pragma mark Feedback Action
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error{
+	[self dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark -
+#pragma mark Memory management
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
+
+- (void)viewDidUnload {
+}
+
+
+- (void)dealloc {
+    [super dealloc];
+}
+
+
+@end
+

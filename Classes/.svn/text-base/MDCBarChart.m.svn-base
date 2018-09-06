@@ -1,0 +1,158 @@
+	//
+	//  MDCBarChart.m
+	//  TimeKeeper
+	//
+	//  Created by Michael Dietz on 10.11.10.
+	//  Copyright 2010 SAP MD. All rights reserved.
+	//
+
+#import "MDCBarChart.h"
+#import "DrawUtilities.h"
+
+@implementation MDCBarChart
+
+
+- (void)drawRect:(CGRect)rect {
+	
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+	
+	if([chartGroups count] > 0){
+		
+		
+		int buffer = 15;
+		int startX = x + buffer; int startY = x + buffer;
+		int height = self.contentSize.height - buffer;
+		int width  = self.contentSize.width - 2*buffer;
+		
+		if(title != nil){
+			[DrawUtilities drawText:title :x :y :self.frame.size.width :1];
+			startY += 15; height -= 15;
+		}
+		
+		int groupSpace     = 30; int colorCounter = 0;
+		int groupX         = startX + 3; int groupY = startY + 10;
+		int heightPerGroup =  ((height - 3 - groupY) / [chartGroups count]) - 25;
+		int maxValue       = [MDCBarChart getMaxValue:chartGroups] * 1.2;
+		
+		
+		for(id obj in chartGroups){
+			
+			CGContextSetFillColorWithColor(ctx, colors[colorCounter].CGColor);
+			
+			if([obj isKindOfClass:[MDCChartDataGroup class]]){
+				
+				MDCChartDataGroup* group = (MDCChartDataGroup*)obj;
+				[DrawUtilities drawText:group.description :groupX+1 :groupY-13 :width :0];
+				[MDCBarChart drawBar:groupX :groupY :width :group.value :maxValue :heightPerGroup :colors[colorCounter] :group.catDescription :group.valueLabel];
+				
+				colorCounter++;
+				
+			}if([obj isKindOfClass:[NSArray class]]){
+				
+				int subGroupY = groupY; int heightPerSubGroup = heightPerGroup / [(NSArray*)obj count];
+				for(MDCChartDataGroup* subGroup in (NSArray*)obj){
+					
+						//Draw Category label
+					if(subGroupY == groupY)
+						[DrawUtilities drawText:subGroup.description :groupX+1 :groupY-13 :width :0];
+					
+						//Draw a Bar
+					[MDCBarChart drawBar:groupX :subGroupY :width :subGroup.value :maxValue :heightPerSubGroup :colors[colorCounter] :subGroup.catDescription :subGroup.valueLabel];
+					subGroupY += heightPerSubGroup;	colorCounter++;
+					
+				}
+				colorCounter = 0;
+			}
+			groupY += heightPerGroup + groupSpace;
+		}
+		
+		CGContextSetStrokeColorWithColor(ctx, [UIColor grayColor].CGColor);
+		CGContextSetLineWidth(ctx, 7);
+		CGContextSetLineCap(ctx, kCGLineCapRound);
+		
+		CGMutablePathRef path = CGPathCreateMutable();
+		CGPathMoveToPoint(path, NULL, startX, startY);
+		CGPathAddLineToPoint(path, NULL, startX, height);
+		CGPathAddLineToPoint(path, NULL, width, height);
+		
+			//Draw the path
+		CGContextBeginPath(ctx);
+		CGContextAddPath(ctx, path);
+		CGContextDrawPath(ctx, kCGPathStroke);
+		
+	}
+}
+
++(void)drawBar:(int)x:(int)y:(int)fullWidth:(int)value:(int)maxValue:(int)height:(UIColor*)color:(NSString*)description:(NSString*)valueLabel {
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+	CGContextSaveGState(ctx);
+	
+	float widthValue = ((float)(fullWidth - x))*((float)value / (float)maxValue) + 5;
+	
+		//Draw Value Label
+	CGContextSetFillColorWithColor(ctx, [UIColor whiteColor].CGColor);
+		//[DrawUtilities drawText:description :x+widthValue+3 :(y + height/2 - 11) :120 :0 :10];
+	[DrawUtilities drawText:valueLabel :x+widthValue+3 :(y + height/2 -5 )      :120 :0 :10];
+	
+	CGRect barRect = CGRectMake(x, y, widthValue, height);
+	
+		//Clip the context so that the 
+	CGContextClipToRect(ctx, barRect);
+	
+	
+		//Construct grandient based on given color
+	const CGFloat* components = CGColorGetComponents(color.CGColor);
+	NSString *colorAsString = [NSString stringWithFormat:@"%f,%f,%f,%f", components[0], components[1], components[2], components[3]];
+	NSLog(@"%@", colorAsString);
+	CGFloat colors[] = {
+		components[0],components[1],components[2],0.9,
+			//		components[0],components[1],components[2],0.4,
+		components[0],components[1],components[2],0.0 
+	};
+	
+		//Draw Graient
+	CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
+	CGGradientRef gradi = CGGradientCreateWithColorComponents(space, colors, NULL, 2);
+	CGPoint startPoint = CGPointMake(x,y);
+	CGPoint endPoint = CGPointMake(x + widthValue,y );
+	CGContextDrawLinearGradient(ctx, gradi, startPoint, endPoint, 0);
+	
+		//Draw Bar
+	/*CGContextSetFillColorWithColor(ctx, color.CGColor);
+	 CGContextFillRect(ctx, barRect);*/
+	
+		//Restore Context
+	CGContextRestoreGState(ctx);
+	
+		//Draw a white border arround each chart
+	CGContextSetStrokeColorWithColor(ctx, [UIColor darkGrayColor].CGColor);
+	CGContextStrokeRect(ctx, barRect);
+}
+
++(int)getMaxValue:(NSArray*)dataArray{
+	
+	int maxValue = 0;
+	for(id obj in dataArray){
+		if([obj isKindOfClass:[MDCChartDataGroup class]]){
+			MDCChartDataGroup* maxGroup = (MDCChartDataGroup*)obj;
+			if(maxValue < maxGroup.value){
+				maxValue = maxGroup.value;
+			}
+			
+		}if([obj isKindOfClass:[NSArray class]]){
+			for(MDCChartDataGroup* subGroup in (NSArray*)obj){
+				if(maxValue < subGroup.value){
+					maxValue = subGroup.value;
+				}
+			}
+		}
+	}
+	return maxValue;
+}
+
+- (void)dealloc {
+    [super dealloc];
+}
+
+
+@end
